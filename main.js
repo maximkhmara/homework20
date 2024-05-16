@@ -1,70 +1,66 @@
-document.querySelector('.search-btn').addEventListener('click', function () {
-	let postId = document.querySelector('#postId').value;
-
-	if (postId < 1 || postId > 100) {
-		alert('Введіть id поста від 1 до 100');
-		return;
+class SuperMath {
+	check(obj) {
+		const { X, Y, Z } = obj;
+		if (this.isInvalidInput(X, Y, Z)) {
+			alert('Введено некоректні дані. Спробуйте ще раз.');
+			this.input();
+			return;
+		}
+		const proceed = confirm(
+			`Чи ви хочете зробити дію ${Z} з числами ${X} і ${Y}?`
+		);
+		if (proceed) {
+			if (this.isValidOperator(Z)) {
+				const result = this.calculate(X, Y, Z);
+				alert(`Результат: ${result}`);
+			} else {
+				alert('Введено некоректний знак операції. Спробуйте ще раз.');
+				this.input();
+			}
+		} else {
+			this.input();
+		}
 	}
 
-	fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error('Сервер не відповідає');
-			}
-			return response.json();
-		})
-		.then((post) => {
-			let postContainer = document.getElementById('postContainer');
-			postContainer.innerHTML = '';
+	input() {
+		const X = parseFloat(prompt('Введіть число X:'));
+		const Y = parseFloat(prompt('Введіть число Y:'));
+		const Z = prompt('Введіть знак операції (+ - / * %):');
+		this.check({ X, Y, Z });
+	}
 
-			let postTitle = document.createElement('h2');
-			postTitle.textContent = `Пост: ${post.id}`;
-			let postHeading = document.createElement('h3');
-			postHeading.textContent = `Заголовок: ${post.title}`;
-			let postBody = document.createElement('p');
-			postBody.textContent = post.body;
-			let commentsBtn = document.createElement('button');
-			commentsBtn.textContent = 'Завантажити коментарі до поста';
-			let commentsContainer = document.createElement('div');
+	isValidOperator(Z) {
+		return ['+', '-', '/', '*', '%'].includes(Z);
+	}
 
-			postContainer.append(
-				postTitle,
-				postHeading,
-				postBody,
-				commentsBtn,
-				commentsContainer
-			);
+	isInvalidInput(X, Y, Z) {
+		return (
+			isNaN(X) ||
+			isNaN(Y) ||
+			Z.trim() === '' ||
+			X === null ||
+			Y === null ||
+			Z === null
+		);
+	}
 
-			commentsBtn.addEventListener('click', function () {
-				fetch(`https://jsonplaceholder.typicode.com/comments?postId=${postId}`)
-					.then((response) => response.json())
-					.then((comments) => {
-						commentsContainer.innerHTML = '';
-						let commentsTitle = document.createElement('h3');
-						commentsTitle.textContent = 'Коментарі';
-						commentsContainer.appendChild(commentsTitle);
-						comments.forEach((comment) => {
-							let commentDiv = document.createElement('div');
-							let commentName = document.createElement('h4');
-							commentName.textContent = `Ім'я: ${comment.name}`;
-							let commentEmail = document.createElement('p');
-							commentEmail.textContent = `Email: ${comment.email}`;
-							let commentBody = document.createElement('p');
-							commentBody.textContent = comment.body;
-							commentDiv.appendChild(commentName);
-							commentDiv.appendChild(commentEmail);
-							commentDiv.appendChild(commentBody);
-							commentsContainer.appendChild(commentDiv);
-						});
-					})
-					.catch((error) => {
-						alert('Помилка при завантаженні коментарів.');
-						console.error(error);
-					});
-			});
-		})
-		.catch((error) => {
-			alert('Сервер не відповідає');
-			console.error(error);
-		});
-});
+	calculate(X, Y, Z) {
+		switch (Z) {
+			case '+':
+				return X + Y;
+			case '-':
+				return X - Y;
+			case '/':
+				return X / Y;
+			case '*':
+				return X * Y;
+			case '%':
+				return X % Y;
+			default:
+				throw new Error('Некоректний знак операції.');
+		}
+	}
+}
+
+const math = new SuperMath();
+math.check({ X: 14, Y: 3, Z: '*' });

@@ -7,28 +7,3 @@ body {
   font-family: Helvetica;
 }
 
-
-.container {
-    padding: 30px;
-}
-
-
-input {
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-#postContainer {
-    margin-top: 20px;
-    border-top: 1px solid #ccc;
-    padding-top: 20px;
-}
